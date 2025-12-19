@@ -19,4 +19,6 @@ export function runCommand(
     if (!handler) {
         throw new Error(`Unknown command: ${cmdName}`);
     }
+
+    handler(cmdName, ...args);
 }
