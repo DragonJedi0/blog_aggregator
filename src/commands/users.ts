@@ -1,5 +1,6 @@
-import { createUser, getUserByName } from "src/lib/db/queries/users";
+import { createUser, deleteAllUsers, getUserByName } from "src/lib/db/queries/users";
 import { setUser } from "../config";
+import { error } from "console";
 
 export async function handlerLogin(cmdName: string, ...args: string[]){
     if (args.length !== 1){
@@ -18,7 +19,7 @@ export async function handlerLogin(cmdName: string, ...args: string[]){
 }
 
 export async function handlerRegister(cmdName: string, ...args: string[]) {
-    if (args.length !==1){
+    if (args.length !== 1){
         throw new Error(`usage: ${cmdName} <name>`)
     }
 
@@ -31,6 +32,15 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
         console.log(`User ${userName} created successfully`);
         console.log(user);
     } else {
-        throw new Error(`User alredy registered. Use 'login ${userName}' to login`);
+        throw new Error(`User already registered. Use 'login ${userName}' to login`);
     }
+}
+
+export async function handlerReset(cmdName: string, ...args: string[]) {
+    if(args.length > 1) {
+        throw new Error(`usage: reset`);
+    }
+
+    await deleteAllUsers();
+    console.log("Users table cleared!")
 }
