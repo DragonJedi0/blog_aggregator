@@ -1,6 +1,5 @@
-import { createUser, deleteAllUsers, getUserByName } from "src/lib/db/queries/users";
-import { setUser } from "../config";
-import { error } from "console";
+import { createUser, deleteAllUsers, getUsers, getUserByName } from "src/lib/db/queries/users";
+import { readConfig, setUser } from "../config";
 
 export async function handlerLogin(cmdName: string, ...args: string[]){
     if (args.length !== 1){
@@ -43,4 +42,22 @@ export async function handlerReset(cmdName: string, ...args: string[]) {
 
     await deleteAllUsers();
     console.log("Users table cleared!")
+}
+
+export async function handlerListUsers(cmdName:string, ...args: string[]){
+    if(args.length > 1){
+        throw new Error(`usage: users`);
+    }
+
+    const users = await getUsers();
+    const config = readConfig();
+    const current_user_name = config.currentUserName;
+    
+    users.forEach((user: any) => {
+        if(user.name == current_user_name){
+            console.log(`* ${user.name} (current)`);
+        } else {
+            console.log(`* ${user.name}`);
+        }
+    });
 }
