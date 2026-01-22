@@ -25,3 +25,8 @@ export async function printFeed(feed: Feed, user: User) {
 export async function deleteAllFeeds() {
     await db.delete(feeds);
 }
+
+export async function getFeeds() {
+    const result = await db.select().from(feeds);
+    return result;   
+}
