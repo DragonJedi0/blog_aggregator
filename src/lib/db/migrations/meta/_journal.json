@@ -15,6 +15,13 @@
       "when": 1769011777092,
       "tag": "0001_unusual_grandmaster",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769463650296,
+      "tag": "0002_illegal_goliath",
+      "breakpoints": true
     }
   ]
 }

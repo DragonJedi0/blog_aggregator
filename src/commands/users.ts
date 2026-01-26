@@ -1,6 +1,5 @@
 import { createUser, deleteAllUsers, getUsers, getUserByName } from "src/lib/db/queries/users";
 import { readConfig, setUser } from "../config";
-import { deleteAllFeeds } from "src/lib/db/queries/feeds";
 
 export async function handlerLogin(cmdName: string, ...args: string[]){
     if (args.length !== 1){
@@ -42,8 +41,7 @@ export async function handlerReset(cmdName: string, ...args: string[]) {
     }
 
     await deleteAllUsers();
-    console.log("Users table cleared!")
-    await deleteAllFeeds();
+    console.log("Users table cleared!");
     console.log("Feeds table cleared!");
 }
 
