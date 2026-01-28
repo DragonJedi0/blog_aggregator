@@ -1,4 +1,5 @@
 import { pgTable, timestamp, uuid, text, uniqueIndex } from "drizzle-orm/pg-core";
+import { time } from "node:console";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
@@ -19,6 +20,7 @@ export const feeds = pgTable("feeds", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+  lastFetchedAt: timestamp("last_fetched_at"),
   name: text("name").notNull(),
   url: text("url").notNull().unique(),
   userId: uuid("user_id")
