@@ -1,30 +1,24 @@
 import { readConfig } from "src/config";
 import { createFeed, createFeedFollow, getFeedByUrl, getFeedFollowsForUser, getFeeds, printFeed } from "src/lib/db/queries/feeds";
 import { getUserById, getUserByName } from "src/lib/db/queries/users";
+import { User } from "src/lib/db/schema";
 
-export async function handlerAddFeed(cmdName: string, ...args: string[]) {
+export async function handlerAddFeed(cmdName: string, userObject: User, ...args: string[]) {
     if (args.length !== 2){
         throw new Error(`usage: ${cmdName} <feed name> <feed url>`)
-    }
-
-    const config = readConfig();
-    const user = await getUserByName(config.currentUserName);
-
-    if(!user){
-        throw new Error(`user ${config.currentUserName} not found`);
     }
 
     const feedName = args[0];
     const url = args[1];
 
-    const feedObject = await createFeed(feedName, url, user);
+    const feedObject = await createFeed(feedName, url, userObject);
 
     if(!feedObject){
         throw new Error(`Error creating feed ${feedName}`);
     }
 
     console.log("Feed created successfully:");
-    printFeed(feedObject, user);
+    printFeed(feedObject, userObject);
 }
 
 export async function handlerListFeeds(cmdName:string, ...args: string[]){
@@ -51,17 +45,9 @@ export async function handlerListFeeds(cmdName:string, ...args: string[]){
     }
 }
 
-export async function handlerFollowFeed(cmdName: string, ...args: string[]) {
+export async function handlerFollowFeed(cmdName: string, userObject: User, ...args: string[]) {
     if(args.length !== 1){
         throw new Error(`usage: follow <url>`);
-    }
-
-    // Get User
-    const config = readConfig();
-    const userObject = await getUserByName(config.currentUserName);
-
-    if(!userObject){
-        throw new Error(`user ${config.currentUserName} not found`);
     }
 
     // Get Feed
@@ -84,17 +70,9 @@ export async function handlerFollowFeed(cmdName: string, ...args: string[]) {
     console.log(`User: ${feedFollow.userName}`);
 }
 
-export async function handlerFollowList(cmndName: string, ...args: string[]) {
+export async function handlerFollowList(cmndName: string, userObject: User, ...args: string[]) {
     if(args.length !== 0){
         throw new Error(`usage: following`);
-    }
-
-    // Get User
-    const config = readConfig();
-    const userObject = await getUserByName(config.currentUserName);
-
-    if(!userObject){
-        throw new Error(`user ${config.currentUserName} not found`);
     }
 
     // Get Feed List

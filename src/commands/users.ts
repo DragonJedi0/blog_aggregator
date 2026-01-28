@@ -40,9 +40,17 @@ export async function handlerReset(cmdName: string, ...args: string[]) {
         throw new Error(`usage: reset`);
     }
 
-    await deleteAllUsers();
-    console.log("Users table cleared!");
-    console.log("Feeds table cleared!");
+    try{
+        await deleteAllUsers();
+        console.log("Users table cleared!");
+        console.log("Feeds table cleared!");
+        console.log("Follows table cleared!");
+    } catch(err){
+        if (err instanceof Error){
+           console.log("Error resetting database:", err.message);
+        }
+        throw err;
+    }
 }
 
 export async function handlerListUsers(cmdName:string, ...args: string[]){
