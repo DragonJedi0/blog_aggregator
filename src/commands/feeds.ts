@@ -22,7 +22,7 @@ export async function handlerAddFeed(cmdName: string, userObject: User, ...args:
 
 export async function handlerListFeeds(cmdName:string, ...args: string[]){
     if(args.length !== 0){
-        throw new Error(`usage: feeds`);
+        throw new Error(`usage: ${cmdName}`);
     }
 
     // Get all feeds
@@ -47,7 +47,7 @@ export async function handlerListFeeds(cmdName:string, ...args: string[]){
 
 export async function handlerFollowFeed(cmdName: string, userObject: User, ...args: string[]) {
     if(args.length !== 1){
-        throw new Error(`usage: follow <url>`);
+        throw new Error(`usage: ${cmdName} <url>`);
     }
 
     // Get Feed By URL
@@ -72,15 +72,11 @@ export async function handlerFollowFeed(cmdName: string, userObject: User, ...ar
 
 export async function handlerFollowList(cmdName: string, userObject: User, ...args: string[]) {
     if(args.length !== 0){
-        throw new Error(`usage: following`);
+        throw new Error(`usage: ${cmdName}`);
     }
 
     // Get Feed List
     const userFollowList = await getFeedFollowsForUser(userObject.id);
-
-    // if(userFollowList.length === 0){
-    //     throw new Error(`User ${userObject.name} has no feeds listed.\nUse commands 'follow' or 'addfeed' to create a list`);
-    // }
 
     console.log("------------------------");
     console.log(`Showing Feed Follow List`);
@@ -93,7 +89,7 @@ export async function handlerFollowList(cmdName: string, userObject: User, ...ar
 
 export async function handlerUnfollowFeed(cmdName: string, user: User, ...args: string[]){
     if(args.length !== 1){
-        throw new Error(`usage: unfollow <feed name>`);
+        throw new Error(`usage: ${cmdName} <feed name>`);
     }
 
     const feedUrl = args[0];
@@ -113,5 +109,5 @@ export async function handlerUnfollowFeed(cmdName: string, user: User, ...args: 
         throw err;
     }
 
-    console.log(`User ${user.name} no longer following feed ${feedObject.name}`);
+    console.log(`* user ${user.name} no longer following feed ${feedObject.name}`);
 }

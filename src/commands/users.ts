@@ -37,7 +37,7 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
 
 export async function handlerReset(cmdName: string, ...args: string[]) {
     if(args.length !== 0) {
-        throw new Error(`usage: reset`);
+        throw new Error(`usage: ${cmdName}`);
     }
 
     try{
@@ -55,7 +55,7 @@ export async function handlerReset(cmdName: string, ...args: string[]) {
 
 export async function handlerListUsers(cmdName:string, ...args: string[]){
     if(args.length !== 0){
-        throw new Error(`usage: users`);
+        throw new Error(`usage: ${cmdName}`);
     }
 
     const users = await getUsers();
