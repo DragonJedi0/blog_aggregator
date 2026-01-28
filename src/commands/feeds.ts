@@ -1,6 +1,5 @@
-import { readConfig } from "src/config";
-import { createFeed, createFeedFollow, getFeedByUrl, getFeedFollowsForUser, getFeeds, printFeed } from "src/lib/db/queries/feeds";
-import { getUserById, getUserByName } from "src/lib/db/queries/users";
+import { createFeed, createFeedFollow, deleteFeedFollow, getFeedByUrl, getFeedFollowsForUser, getFeeds, printFeed } from "src/lib/db/queries/feeds";
+import { getUserById } from "src/lib/db/queries/users";
 import { User } from "src/lib/db/schema";
 
 export async function handlerAddFeed(cmdName: string, userObject: User, ...args: string[]) {
@@ -26,6 +25,7 @@ export async function handlerListFeeds(cmdName:string, ...args: string[]){
         throw new Error(`usage: feeds`);
     }
 
+    // Get all feeds
     const feeds = await getFeeds();
 
     if(feeds.length === 0){
@@ -50,7 +50,7 @@ export async function handlerFollowFeed(cmdName: string, userObject: User, ...ar
         throw new Error(`usage: follow <url>`);
     }
 
-    // Get Feed
+    // Get Feed By URL
     const url = args[0];
     const feedObject = await getFeedByUrl(url);
 
@@ -70,7 +70,7 @@ export async function handlerFollowFeed(cmdName: string, userObject: User, ...ar
     console.log(`User: ${feedFollow.userName}`);
 }
 
-export async function handlerFollowList(cmndName: string, userObject: User, ...args: string[]) {
+export async function handlerFollowList(cmdName: string, userObject: User, ...args: string[]) {
     if(args.length !== 0){
         throw new Error(`usage: following`);
     }
@@ -78,9 +78,9 @@ export async function handlerFollowList(cmndName: string, userObject: User, ...a
     // Get Feed List
     const userFollowList = await getFeedFollowsForUser(userObject.id);
 
-    if(userFollowList.length === 0){
-        throw new Error(`User ${userObject.name} has no feeds listed.\nUse commands 'follow' or 'addfeed' to create a list`);
-    }
+    // if(userFollowList.length === 0){
+    //     throw new Error(`User ${userObject.name} has no feeds listed.\nUse commands 'follow' or 'addfeed' to create a list`);
+    // }
 
     console.log("------------------------");
     console.log(`Showing Feed Follow List`);
@@ -89,4 +89,29 @@ export async function handlerFollowList(cmndName: string, userObject: User, ...a
     for (const feed of userFollowList){
         console.log(`Feed: ${feed.feedName}`);
     }
+}
+
+export async function handlerUnfollowFeed(cmdName: string, user: User, ...args: string[]){
+    if(args.length !== 1){
+        throw new Error(`usage: unfollow <feed name>`);
+    }
+
+    const feedUrl = args[0];
+
+    // Get feed by Url
+    const feedObject = await getFeedByUrl(feedUrl);
+    if(!feedObject){
+        throw new Error(`feed at ${feedUrl} not found`);
+    }
+
+    try {
+        await deleteFeedFollow(feedObject.id);
+    } catch(err){
+        if (err instanceof Error){
+           console.log("Error deleting feed follow:", err.message);
+        }
+        throw err;
+    }
+
+    console.log(`User ${user.name} no longer following feed ${feedObject.name}`);
 }
