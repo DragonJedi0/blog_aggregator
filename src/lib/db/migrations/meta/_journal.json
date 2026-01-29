@@ -43,6 +43,13 @@
       "when": 1769622621593,
       "tag": "0005_ancient_bill_hollister",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1769713206393,
+      "tag": "0006_cute_malice",
+      "breakpoints": true
     }
   ]
 }

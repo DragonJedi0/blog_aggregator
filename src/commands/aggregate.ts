@@ -1,11 +1,9 @@
 import { getNextFeedToFetch, markFeedFetched } from "src/lib/db/queries/feeds";
+import { createPost } from "src/lib/db/queries/posts";
 import { fetchFeed } from "src/lib/rss";
 import { parseDuration } from "src/lib/time";
 
 export async function handlerAggregate(cmdName: string, ...args: string[]){
-    // const output = await fetchFeed("https://www.wagslane.dev/index.xml");
-    // console.log(JSON.stringify(output, null, 2));
-
     if(args.length !== 1){
         throw new Error(`usage: ${cmdName} <time_between_reqs>`);
     }
@@ -41,13 +39,18 @@ async function scrapeFeeds() {
         throw new Error("No feeds to scrape");
         return;
     }
+    scrapeFeed(feed.id);
+}
 
-    await markFeedFetched(feed.id);
-    
+async function scrapeFeed(feed_id: string) {
+    const feed = await markFeedFetched(feed_id);
+
     const feedData = await fetchFeed(feed.url);
-    
+
     for (const rssItem of feedData.channel.item){
-        console.log(`* ${rssItem.title}`)
+        const pubDate = new Date(rssItem.pubDate);
+        const validPubDate = isNaN(pubDate.getTime()) ? null : pubDate;
+        await createPost(rssItem.title, rssItem.link, rssItem.description, validPubDate, feed.id);
     }
 }
 
