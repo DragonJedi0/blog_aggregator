@@ -3,6 +3,7 @@ import { CommandsRegistry, registerCommand, runCommand } from "./commands/comman
 import { handlerAddFeed, handlerFollowFeed, handlerFollowList, handlerListFeeds, handlerUnfollowFeed } from "./commands/feeds";
 import { handlerListUsers, handlerLogin, handlerRegister, handlerReset } from "./commands/users";
 import { middlewareLoggedIn } from "./commands/middleware";
+import { handlerBrowse } from "./commands/posts";
 
 async function main() {
   const argsList = process.argv.slice(2);
@@ -26,6 +27,7 @@ async function main() {
   registerCommand(registery, "follow", middlewareLoggedIn(handlerFollowFeed));
   registerCommand(registery, "following", middlewareLoggedIn(handlerFollowList));
   registerCommand(registery, "unfollow", middlewareLoggedIn(handlerUnfollowFeed));
+  registerCommand(registery, "browse", middlewareLoggedIn(handlerBrowse));
 
   try {
     await runCommand(registery, cmdName, ...args);

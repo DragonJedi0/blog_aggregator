@@ -45,6 +45,7 @@ export async function handlerReset(cmdName: string, ...args: string[]) {
         console.log("Users table cleared!");
         console.log("Feeds table cleared!");
         console.log("Follows table cleared!");
+        console.log("Posts table cleared!");
     } catch(err){
         if (err instanceof Error){
            console.log("Error resetting database:", err.message);

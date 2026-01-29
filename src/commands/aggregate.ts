@@ -48,6 +48,7 @@ async function scrapeFeed(feed_id: string) {
     const feedData = await fetchFeed(feed.url);
 
     for (const rssItem of feedData.channel.item){
+        console.log(`Adding post ${rssItem.title} to database`);
         const pubDate = new Date(rssItem.pubDate);
         const validPubDate = isNaN(pubDate.getTime()) ? null : pubDate;
         await createPost(rssItem.title, rssItem.link, rssItem.description, validPubDate, feed.id);
