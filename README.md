@@ -47,6 +47,101 @@ cd blog_aggregator
 
 3. Set up your PostgreSQL database and configure connection details (via environment variables or config file).
 
+
+---
+
+## Database Setup
+
+This project uses **Gator** to manage the PostgreSQL database. Follow the steps below to install and set up the database.
+
+### 1. Install PostgreSQL
+
+Make sure you have PostgreSQL installed on your machine:
+
+- **macOS** (using Homebrew):
+
+    ~~~bash
+    brew install postgresql
+    brew services start postgresql
+    ~~~
+
+- **Ubuntu / Debian**:
+
+    ~~~bash
+    sudo apt update
+    sudo apt install postgresql postgresql-contrib
+    sudo systemctl start postgresql
+    ~~~
+
+- **Windows**:  
+Download and install from [https://www.postgresql.org/download/windows/](https://www.postgresql.org/download/windows/).
+
+---
+
+### 2. Install Gator
+
+Install the **Gator CLI** globally using npm:
+
+```bash
+npm install -g gator
+```
+
+Verify installation:
+
+```bash
+gator --version
+```
+
+---
+
+### 3. Configure the database
+
+1. Create a new PostgreSQL database:
+
+```bash
+createdb blog_aggregator
+```
+
+2. Configure your connection string (for example, via environment variables):
+
+```bash
+export DATABASE_URL="postgres://username:password@localhost:5432/blog_aggregator"
+```
+
+Replace username and password with your PostgreSQL credentials.
+
+### 4. Generate migrations
+
+If your project has empty tables:
+
+```bash
+npm run generate
+```
+
+This will create the necessary JSON files (users, feeds, feed_follows, posts) for gator to migrate.
+
+### 5. Run migrations
+
+If your project includes migrations, you can apply them using Gator:
+
+```bash
+npm run migrate
+```
+
+This will create the necessary tables (users, feeds, feed_follows, posts) for the aggregator to work.
+
+### 6. Verify
+
+After setup, you can connect to the database to check the tables:
+
+```bash
+sudo -u postgres psql
+
+postgres=# \c gator
+You are now connected to database "gator" as user "postgres".
+gator=# \dt
+```
+
 ---
 
 ## Usage
